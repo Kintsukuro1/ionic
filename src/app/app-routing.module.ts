@@ -13,23 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
-    path: 'cambiar-password',
-    loadChildren: () => import('./pages/cambiar-password/cambiar-password.module').then( m => m.CambiarPasswordPageModule)
-  },
-  {
-    path: 'recuperar-password',
-    loadChildren: () => import('./pages/recuperar-password/recuperar-password.module').then( m => m.RecuperarPasswordPageModule)
-  },
-  {
-    path: 'menu-principal',
-    loadChildren: () => import('./pages/menu-principal/menu-principal.module').then( m => m.MenuPrincipalPageModule)
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
 ];
 
