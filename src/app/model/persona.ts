@@ -53,7 +53,7 @@ export class Persona {
   }
 
   public formatDateToMMddyyyy(date: Date): string {
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Sumar 1 ya que los meses van de 0 a 11
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;

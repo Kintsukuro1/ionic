@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { HelperService } from 'src/app/services/helper.service';
+import { Router, NavigationExtras } from '@angular/router'; 
+import { ToastController } from '@ionic/angular'; 
+import { Usuario } from 'src/app/model/usuario';
 
 @Component({
   selector: 'app-login',
@@ -10,75 +10,52 @@ import { HelperService } from 'src/app/services/helper.service';
 })
 export class LoginPage implements OnInit {
 
-  usuario:string = "";
-  contrasena:string = "";
+  public usuario: Usuario;
 
-  constructor( private router:Router, private helper:HelperService, private toastCtrl: ToastController ) { }
-
-  ngOnInit() {
+  constructor(private router: Router, private toastController: ToastController) {
+    this.usuario = new Usuario('', '', '', '', '', '', 0, null)
+  
+    this.usuario.setUsuario('atorres@duocuc.cl', '1234');
+   
   }
 
-  onLogin() {
+  public ngOnInit(): void {
 
-    // USUARIO NO INGRESA NINGUN DATO
-    if (this.usuario == "") {
-      this.helper.showAlert( "Debe ingresar un usuario", "Error", "Campo obligatorio" )
-      return;
-    }
-    if (this.contrasena == "") {
-      this.helper.showAlert( "Debe ingresar una contraseña", "Error", "Campo obligatorio" )
-      return;
-    }
-
-    // USUARIO INGRESA
-    if ( this.usuario == "admin" && this.contrasena == "admin123" ) {
-      var idCuenta = this.usuario;
-      this.router.navigateByUrl('menu-principal/' + idCuenta);
-      this.presentToast();
-    }
-
-    // USUARIO INGRESA DATOS INCORRECTOS
-    else{
-      this.helper.showAlert( "Usuario y/o contraseña no existen", "Error", "Datos ingresados no validos" )
-      return;
-      //alert("Usuario o contraseña incorrecta.")
-    }
-
+    
   }
 
-    // REGISTRARSE
-    Registrarse(){
-    this.router.navigateByUrl('register');
+  public ingresar(): void {
+    
+    if (this.usuario) {
+      
+      const mensajeError = this.usuario.validarUsuario();
+      if (mensajeError) {
+        this.mostrarMensaje(mensajeError);
+        return;
+      }
+
+      const usu: Usuario | undefined = this.usuario.buscarUsuarioValido(this.usuario.correo, this.usuario.password);
+      
+      if (usu) {
+        
+        const navigationExtras: NavigationExtras = {
+          state: {
+            usuario: usu
+          }
+        };
+        this.mostrarMensaje(`¡Bienvenido(a) ${usu.nombre} ${usu.apellido}!`);
+        this.router.navigate(['/home'], navigationExtras); 
+      }
+    }
   }
 
-  // RECUPERAR CONTRASEÑA
-  recuperarPassword(){
-    this.router.navigateByUrl('recuperar-password');
-  }
-
-  async presentToast() {
-    const toast = await this.toastCtrl.create({
-      message: 'Sesión iniciada correctamente.',
-      duration: 2000
-    });
+  async mostrarMensaje(mensaje: string, duracion?: number) {
+    
+    const toast = await this.toastController.create({
+        message: mensaje,
+        duration: duracion? duracion: 2000
+      });
     toast.present();
   }
 
-  
-
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
